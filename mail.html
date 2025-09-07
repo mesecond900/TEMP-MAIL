@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TempMail Generator</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background-color: #000;
+      color: black;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      padding: 10px;
+    }
+    .card {
+      background: #0a0a0a;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px red;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #00aaff;
+    }
+    h1,h2,h3 {
+      text-align: center;
+      color: #00aaff;
+      margin: 0 0 1rem 0;
+      font-weight: 700;
+      text-shadow: 0 0 10px #black;
+    }
+    .email-group {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 1rem;
+    }
+    .email-input {
+      flex: 1;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 2px solid #00aaff;
+      border-radius: 0.8rem;
+      outline: none;
+      background-color: #000;
+      color: #00aaff;
+      text-align: center;
+      box-shadow: inset 0 0 6px black;
+    }
+    .btn {
+      padding: 0.6rem 0.8rem;
+      border: none;
+      border-radius: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #000;
+      background: linear-gradient(135deg,#00aaff,#005577);
+      box-shadow: 0 0 10px black;
+      transition: all 0.2s ease-in-out;
+      min-width: 50px;
+      text-align: center;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg,#005577,black);
+      color: #fff;
+      box-shadow: 0 0 20px #black;
+    }
+    .history-container {
+      margin-top: 1rem;
+      border-top: 1px solid #red;
+      padding-top: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .history-item {
+      padding: 0.5rem;
+      background: #000;
+      border: 1px solid #00aaff;
+      border-radius: 0.5rem;
+      margin-bottom: 0.4rem;
+      cursor: pointer;
+      color: #00aaff;
+      font-size: 0.9rem;
+    }
+    .history-item:hover {
+      background: #01010f;
+      box-shadow: 0 0 10px #00aaff;
+    }
+    .no-messages {
+      text-align: center;
+      color: #00aaff;
+      font-style: italic;
+      padding: 0.5rem 0;
+    }
+    .loader {
+      border: 3px solid #111;
+      border-top: 3px solid #red;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    .flex-center { display:flex; align-items:center; justify-content:center; gap:6px; color:#00aaff; }
+    .hidden { display: none; }
+    #inboxMessages { max-height: 250px; overflow-y: auto; }
+    #contentBody {
+      max-height: 300px;
+      overflow-y: auto;
+      background: #000;
+      color: #00aaff;
+      padding: 0.5rem;
+      border: 1px solid #00aaff;
+      border-radius: 0.5rem;
+    }
+    .watermark {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(0,170,255,0.5);
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    .watermark a {
+      color: #00aaff;
+      text-decoration: none;
+      text-shadow: 0 0 6px #00aaff;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔹 ChatGPT style fixed top toolbar -->
+<div style="width:100%;height:40px;background:linear-gradient(to right,#000000,#001133);display:flex;align-items:center;justify-content:space-between;padding:0 10px;box-sizing:border-box;position:fixed;top:0;left:0;z-index:999;">
+
+  <!-- Three horizontal lines (menu) -->
+  <div style="cursor:pointer;color:#0ff;font-size:22px;" onclick="toggleMenu()">&#9776;</div>
+
+  <!-- Center text -->
+  <div style="flex:1;text-align:center;font-weight:bold;color:#0ff;font-size:16px;">
+    TEMPORARY EMAILS GENERATOR 
+  </div>
+</div>
+
+<!-- 🔹 Dropdown menu (GPT style, bigger) -->
+<div id="toolbarMenu" style="display:none;position:absolute;top:45px;left:10px;background:#1e1e1e;border:1px solid #333;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,0.5);overflow:hidden;z-index:1000;min-width:200px;">
+
+  <!-- Heading inside dropdown -->
+  <div style="font-weight:bold;color:#0ff;text-align:center;padding:12px 0;border-bottom:1px solid #333;">
+    MR SECOND
+  </div>
+
+  <button onclick="window.open('<a href="https://wa.me/923235633449','_blank')" 
+    style="all:unset;display:flex;align-items:center;width:100%;padding:12px 16px;cursor:pointer;color:#ddd;font-size:15px;gap:12px;">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="20" height="20">
+    WhatsApp
+  </button>
+
+  <hr style="margin:0;border:0;border-top:1px solid #333;">
+
+  <button onclick="window.open('https://t.me/PUBLICGROUP38','_blank')" 
+    style="all:unset;display:flex;align-items:center;width:100%;padding:12px 16px;cursor:pointer;color:#ddd;font-size:15px;gap:12px;">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" width="20" height="20">
+    Telegram
+  </button>
+
+  <hr style="margin:0;border:0;border-top:1px solid #333;">
+
+  <button onclick="window.open('https://youtube.com/@mr.second09?si=xwSUsTnCf-1_YSWV','_blank')" 
+    style="all:unset;display:flex;align-items:center;width:100%;padding:12px 16px;cursor:pointer;color:#ddd;font-size:15px;gap:12px;">
+    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="20" height="20">
+    YouTube
+  </button>
+</div>
+
+<!-- 🔹 Space below to avoid overlap -->
+<div style="height:50px;"></div>
+
+<script>
+  function toggleMenu(){
+    let menu=document.getElementById("toolbarMenu");
+    menu.style.display = (menu.style.display==="block") ? "none" : "block";
+  }
+
+  // Hover effect
+  document.addEventListener("mouseover",function(e){
+    if(e.target.closest("button")){
+      e.target.closest("button").style.background="#2a2a2a";
+    }
+  });
+  document.addEventListener("mouseout",function(e){
+    if(e.target.closest("button")){
+      e.target.closest("button").style.background="transparent";
+    }
+  });
+
+  // Auto close if clicked outside
+  document.addEventListener("click",function(e){
+    if(!e.target.closest("#toolbarMenu") && !e.target.closest("div[onclick]")){
+      document.getElementById("toolbarMenu").style.display="none";
+    }
+  });
+</script>
+<div class="container">
+
+  <h1> TEMPORARY EMAI</h1>
+
+
+  <div class="card">
+    <div class="email-group">
+      <input type="text" id="emailInput" class="email-input" placeholder="EMAIL APPEAR HERE..." readonly />
+      <button id="copyBtn" class="btn">COPY</button>
+    </div>
+    <button id="generateBtn" class="btn" style="width:100%;"> Generate</button>
+
+    <div class="history-container">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3>RECENT EMAIL</h3>
+        <button id="clearHistoryBtn" class="btn">Clear</button>
+      </div>
+      <div id="emailHistory"></div>
+      <p id="noHistory" class="no-messages">NOT YET HISTORY</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+      <h3>RECEIVED OTP</h3>
+      <button id="refreshBtn" class="btn">REFRESH</button>
+    </div>
+    <div id="inboxLoading" class="flex-center">
+      <div class="loader"></div> <span>UPDATING...</span>
+    </div>
+    <div id="inboxMessages"></div>
+    <p id="noMessages" class="no-messages">No messages yet</p>
+  </div>
+
+  <div id="messageContent" class="card hidden">
+    <h3 id="contentSubject"></h3>
+    <p><strong>From:</strong> <span id="contentFrom"></span></p>
+    <p><strong>Date:</strong> <span id="contentDate"></span></p>
+    <hr />
+    <div id="contentBody"></div>
+  </div>
+
+  <div class="watermark">
+    DEVELOPER <a href="https://t.me/PUBLICGROUP38" target="_blank">MR SECOND</a><br>
+  
+
+<script>
+  const emailInput=document.getElementById('emailInput');
+  const copyBtn=document.getElementById('copyBtn');
+  const generateBtn=document.getElementById('generateBtn');
+  const refreshBtn=document.getElementById('refreshBtn');
+  const inboxMessages=document.getElementById('inboxMessages');
+  const noMessages=document.getElementById('noMessages');
+  const inboxLoading=document.getElementById('inboxLoading');
+  const messageContent=document.getElementById('messageContent');
+  const contentSubject=document.getElementById('contentSubject');
+  const contentFrom=document.getElementById('contentFrom');
+  const contentDate=document.getElementById('contentDate');
+  const contentBody=document.getElementById('contentBody');
+  const emailHistory=document.getElementById('emailHistory');
+  const noHistory=document.getElementById('noHistory');
+  const clearHistoryBtn=document.getElementById('clearHistoryBtn');
+
+  const domains=['1secmail.com','1secmail.org','wwjmp.com','esiix.com'];
+
+  function generateUsername(){
+    const p=['ghost','dark','cyber','hacker','neo','matrix','black','blue'];
+    const s=['lord','king','mail','drop','node','inbox','code','byte'];
+    const num=Math.floor(Math.random()*900)+100;
+    return p[Math.floor(Math.random()*p.length)]+s[Math.floor(Math.random()*s.length)]+num;
+  }
+  function generateEmail(){
+    const u=generateUsername();
+    const d=domains[Math.floor(Math.random()*domains.length)];
+    return `${u}@${d}`;
+  }
+  function saveEmail(email){
+    let h=JSON.parse(localStorage.getItem('tempEmailHistory')||'[]');
+    if(!h.includes(email)){ h.unshift(email); if(h.length>10) h=h.slice(0,10); localStorage.setItem('tempEmailHistory',JSON.stringify(h)); }
+    localStorage.setItem('tempEmail',email);
+    loadHistory();
+  }
+  function loadEmail(){ return localStorage.getItem('tempEmail'); }
+  function loadHistory(){
+    const h=JSON.parse(localStorage.getItem('tempEmailHistory')||'[]');
+    emailHistory.innerHTML='';
+    if(h.length===0){ noHistory.style.display='block'; }
+    else{
+      noHistory.style.display='none';
+      h.forEach(e=>{
+        const item=document.createElement('div');
+        item.className='history-item';
+        item.textContent=e;
+        item.onclick=()=>{ emailInput.value=e; fetchInbox(e); };
+        emailHistory.appendChild(item);
+      });
+    }
+  }
+  function clearHistory(){
+    localStorage.removeItem('tempEmailHistory');
+    localStorage.removeItem('tempEmail');
+    emailHistory.innerHTML='';
+    emailInput.value='';
+    noHistory.style.display='block';
+  }
+  async function copyEmail(){
+    const e=emailInput.value;if(!e)return;
+    try{
+      await navigator.clipboard.writeText(e);
+      copyBtn.textContent='✅';
+      setTimeout(()=>copyBtn.textContent='📋',1500);
+    }catch{
+      alert("Copy failed");
+    }
+  }
+  async function handleGenerate(){
+    const e=generateEmail();
+    emailInput.value=e;saveEmail(e);fetchInbox(e);
+  }
+  async function fetchInbox(e){
+    if(!e)return;
+    inboxLoading.style.display='flex';inboxMessages.innerHTML='';noMessages.style.display='none';messageContent.classList.add('hidden');
+    const [l,d]=e.split('@');
+    const url=`https://www.1secmail.com/api/v1/?action=getMessages&login=${l}&domain=${d}`;
+    try{
+      const r=await fetch(url);const m=await r.json();
+      inboxLoading.style.display='none';
+      if(m.length===0){ noMessages.style.display='block'; }
+      else{ displayMessages(m,l,d); }
+    }catch(err){
+      inboxLoading.style.display='none';noMessages.textContent='NO INTERNET PROBLEM';noMessages.style.display='block';
+    }
+  }
+  function displayMessages(m,l,d){
+    inboxMessages.innerHTML='';
+    m.forEach(msg=>{
+      const el=document.createElement('div');
+      el.className='history-item';
+      const s=msg.subject||'(No Subject)';
+      const f=msg.from;const dt=new Date(msg.date).toLocaleString();
+      el.innerHTML=`<b>${s}</b><br>${f}<br>${dt}`;
+      el.addEventListener('click',()=>openMessage(msg.id,l,d,s,f,dt));
+      inboxMessages.appendChild(el);
+    });
+  }
+  async function openMessage(id,l,d,s,f,dt){
+    messageContent.classList.remove('hidden');
+    contentSubject.textContent=s;contentFrom.textContent=f;contentDate.textContent=dt;
+    contentBody.innerHTML='<div class="flex-center"><div class="loader"></div> Loading...</div>';
+    const url=`https://www.1secmail.com/api/v1/?action=readMessage&login=${l}&domain=${d}&id=${id}`;
+    try{
+      const r=await fetch(url);const data=await r.json();contentBody.innerHTML='';
+      if(data.htmlBody){ const ifr=document.createElement('iframe');ifr.srcdoc=data.htmlBody;ifr.style.width='100%';ifr.style.height='300px';ifr.style.border='none';contentBody.appendChild(ifr);}
+      else if(data.textBody){const pre=document.createElement('pre');pre.textContent=data.textBody;contentBody.appendChild(pre);}
+      else{contentBody.innerHTML='<p>No content</p>';}
+    }catch(err){contentBody.innerHTML='<p>Failed to load message.</p>';}
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    loadHistory();const e=loadEmail();if(e){emailInput.value=e;fetchInbox(e);}
+    copyBtn.addEventListener('click',copyEmail);
+    generateBtn.addEventListener('click',handleGenerate);
+    refreshBtn.addEventListener('click',()=>{const e=emailInput.value;if(e)fetchInbox(e);});
+    clearHistoryBtn.addEventListener('click',clearHistory);
+  });
+</script>
+</body>
+</html>
